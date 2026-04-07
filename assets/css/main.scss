@@ -1,0 +1,104 @@
+---
+# 这一段只能出现在文件最顶部，且只能有一对虚线
+---
+@import "jekyll-theme-prologue";
+
+/* 1. 导航栏修复：文字截断 + 图标防重叠 */
+#nav ul li a span {
+    display: block;
+    position: relative;
+    padding-left: 2.8em !important; 
+    padding-right: 1em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+}
+
+#nav ul li a span:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2.5em;
+    text-align: center;
+}
+
+/* --- 顶部 Logo 区域精准对齐修复 --- */
+#logo {
+    /* 1. 解决“靠下”：强行把默认的外边距清零 */
+    margin: 0 !important; 
+    
+    /* 2. 解决“靠左”：设置与下方导航栏一致的 1.5em 缩进 */
+    padding: 1.5em 1.5em 0.5em 1.5em !important; 
+    
+    text-align: left !important;
+}
+
+#logo #home-link {
+    text-align: left !important;
+    display: block !important;
+}
+
+/* 头像：确保它是垂直堆叠的第一行，不产生额外偏移 */
+#logo .image.avatar48 {
+    position: relative !important; /* 彻底取消源码中的 absolute 定位 */
+    left: 0 !important;
+    top: 0 !important;
+    display: block !important;
+    margin: 0 0 0.8em 0 !important; /* 只保留下边距，推开标题 */
+}
+
+/* 标题和副标题：确保左侧完全顶格 */
+#logo h1#title, 
+#logo p {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    text-align: left !important;
+}
+
+#logo h1#title {
+    font-size: 1.2em !important;
+    line-height: 1.2 !important;
+}
+
+/* 代码块容器 */
+pre {
+    position: relative;
+    padding-top: 2.5em !important; /* 为顶部的标签留出空间 */
+}
+
+/* 右上角总容器 */
+.code-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0 10px;
+    background: rgba(255, 255, 255, 0.1); /* 半透明背景 */
+    color: #ccc;
+    font-size: 0.8em;
+    height: 2.2em;
+    line-height: 2.2em;
+    display: flex;
+    gap: 15px;
+    border-radius: 0 4px 0 4px;
+    font-family: sans-serif;
+}
+
+/* 复制按钮样式 */
+.copy-btn {
+    cursor: pointer;
+    color: #8ebebc; /* 使用你主题的青绿色 */
+    font-weight: 600;
+    &:hover {
+        color: #fff;
+    }
+}
+
+/* 语言标签样式 */
+.code-lang {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #888;
+}
+
+

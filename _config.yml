@@ -1,0 +1,55 @@
+# 开发者备注：这是为方便你使用而提供的 jekyll-theme-prologue 示例配置文件。
+# 要使用它，请将其移动到项目的根目录下。
+# 请注意，以下几行对于 Prologue 主题正常运行是**必须**的：
+#
+# theme: jekyll-theme-prologue
+# collections: [sections]
+#
+# 它们会激活主题，并告诉 Jekyll 在 /_sections 文件夹中查找你的首页内容。
+# 注意：文件夹名以斜杠开头 "_sections"，而配置项里不需要。
+# 社交设置可以生成 Twitter 等链接，但前提是你必须提供对应的 URL。
+#
+# 另外，请务必根据你的网站自定义 url 和 baseurl。
+# ---------------------------------------------------------------
+
+# 欢迎使用 Jekyll！
+#
+# 此配置文件用于设置影响整个网站的全局变量。
+# 通常只需设置一次，之后很少需要编辑。
+#
+# 注意：当你修改此文件后，'bundle exec jekyll serve' 不会自动重新加载。
+# 你必须按下 Ctrl+C 停止服务，然后重启进程才会生效。
+
+# 站点设置 (Site settings)
+# 这些用于个性化你的站点。你可以通过 {{ site.title }} 等标签在模板中调用。
+title: didi 的博客      # 你的网站标题
+subtitle: 这个人很懒, 还没有写副标题      # 你的网站副标题
+description: 这个人很懒, 还没有写描述          # 网站描述
+author: did              # 你的名字
+email: did2818233534@outlook.com
+avatar: https://avatars.githubusercontent.com/u/135569561?v=4&size=64 # 你的头像路径
+
+# 路径设置 (URL settings)
+# 重要：如果你在本地运行或使用 username.github.io，请保持 baseurl 为空 ""
+baseurl: ""              # 站点的子路径，例如 /blog
+url: "did2818233534.github.io"                  # 站点的域名，例如 https://example.com
+
+# 社交链接设置 (Social settings)
+# 只有填写了完整的 URL（包含 https://），图标才会显示
+github_url: https://github.com/did2818233534
+
+# Google Analytics 追踪 ID：
+google_analytics:
+
+# ---------------------------------------------------------------
+# 以下设置是 Prologue 主题运行所必需的核心配置，请勿随意删除：
+# ---------------------------------------------------------------
+
+# 指定使用的主题
+# theme: jekyll-theme-prologue
+
+# 启用集合（Collections）功能，这是该主题显示首页内容的核心机制
+collections:
+  sections:
+    output: true         # 允许生成这些页面的 HTML
+

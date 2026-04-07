@@ -1,0 +1,64 @@
+<!-- Footer -->
+<div id="footer">
+  
+  <!-- Copyright -->
+  <ul class="copyright">
+    {% if site.title or site.author %}
+      <li>&copy; {{- site.title | default: site.author -}}. All rights reserved.</li>
+    {% endif %}
+  </ul>
+  
+</div>
+
+<script>
+document.querySelectorAll('pre').forEach((prevBlock) => {
+    // 1. 初始化默认语言
+    let language = 'CODE';
+
+    // 2. 寻找语言类名 (兼容 Jekyll/Rouge 的结构)
+    // 脚本会依次检查 code 标签、pre 标签以及它们的父级 div
+    const codeElement = prevBlock.querySelector('code');
+    const container = prevBlock.closest('[class*="language-"]');
+    
+    if (container) {
+        // 从类名中提取语言 (例如从 "language-bash" 提取出 "bash")
+        const langClass = Array.from(container.classList).find(c => c.startsWith('language-'));
+        if (langClass) {
+            language = langClass.replace('language-', '');
+        }
+    } else if (codeElement) {
+        // 备选方案：检查 code 标签本身
+        const langClass = Array.from(codeElement.classList).find(c => c.startsWith('language-'));
+        if (langClass) {
+            language = langClass.replace('language-', '');
+        }
+    }
+
+    // 3. 创建头部容器
+    const header = document.createElement('div');
+    header.className = 'code-header';
+
+    // 4. 创建语言标签
+    const langSpan = document.createElement('span');
+    langSpan.className = 'code-lang';
+    langSpan.innerText = language.toUpperCase(); // 转为大写更美观
+
+    // 5. 创建复制按钮
+    const copyBtn = document.createElement('span');
+    copyBtn.className = 'copy-btn';
+    copyBtn.innerText = 'COPY';
+
+    // 6. 绑定复制事件
+    copyBtn.addEventListener('click', () => {
+        const text = codeElement ? codeElement.innerText : prevBlock.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            copyBtn.innerText = 'DONE!';
+            setTimeout(() => { copyBtn.innerText = 'COPY'; }, 2000);
+        });
+    });
+
+    header.appendChild(langSpan);
+    header.appendChild(copyBtn);
+    prevBlock.appendChild(header);
+});
+</script>
