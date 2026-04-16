@@ -46,7 +46,7 @@ google_analytics:
 # ---------------------------------------------------------------
 
 # 指定使用的主题
-theme: jekyll-theme-prologue
+# theme: jekyll-theme-prologue
 
 # 启用集合（Collections）功能，这是该主题显示首页内容的核心机制
 collections:
