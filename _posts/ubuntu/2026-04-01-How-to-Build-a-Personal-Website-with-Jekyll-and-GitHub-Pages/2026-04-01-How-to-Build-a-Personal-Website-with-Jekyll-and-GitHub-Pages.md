@@ -91,7 +91,7 @@ email:          # 邮箱地址
 # 路径设置 (URL settings)
 # 重要：如果你在本地运行或使用 username.github.io，请保持 baseurl 为空 ""
 baseurl: ""     
-url:            # 站点的域名，应当填写为 github_username.github.io
+url:            # 站点的域名，应当填写为 https://github_username.github.io
 ```
 
 ### 安装依赖
