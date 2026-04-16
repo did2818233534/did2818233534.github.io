@@ -32,7 +32,7 @@ avatar: https://avatars.githubusercontent.com/u/135569561?v=4&size=64 # 你的�
 # 路径设置 (URL settings)
 # 重要：如果你在本地运行或使用 username.github.io，请保持 baseurl 为空 ""
 baseurl: ""              # 站点的子路径，例如 /blog
-url: "did2818233534.github.io"                  # 站点的域名，例如 https://example.com
+url: "https://did2818233534.github.io"                  # 站点的域名，例如 https://example.com
 
 # 社交链接设置 (Social settings)
 # 只有填写了完整的 URL（包含 https://），图标才会显示
@@ -46,7 +46,7 @@ google_analytics:
 # ---------------------------------------------------------------
 
 # 指定使用的主题
-# theme: jekyll-theme-prologue
+theme: jekyll-theme-prologue
 
 # 启用集合（Collections）功能，这是该主题显示首页内容的核心机制
 collections:
