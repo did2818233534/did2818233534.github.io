@@ -44,13 +44,13 @@ github 在中国没有被明确要求被屏蔽, 然而三大运营商还是会�
 点击右上角头像, 点击 Repositories  
 
 <div align="center">
-    <img src="./5765014c-6742-4902-9056-25ed591d5312.png" width="50%" alt="Repositories">  
+    <img src="/posts_image/2026-04-17-How-to-use-GitHub-1/5765014c-6742-4902-9056-25ed591d5312.png" width="50%" alt="Repositories">  
 </div>
 然后就会显示本人创建的仓库, 刚创建的账号没有任何仓库, 我们点击右上角的 NEW 新建一个仓库, 填写仓库名字和描述, 这里我们可以选择创建一个公开仓库(public)还是私有仓库(private), 为了项目不被外人看到, 这里我们选择私有仓库, 之后点击 create repository 完成创建
 
 <div align="center">
-    <img src="./image1.png " width="100%" alt="image1">
-    <img src="./image2.png " width="70%" alt="image2">  
+    <img src="/posts_image/2026-04-17-How-to-use-GitHub-1/image1.png " width="100%" alt="image1">
+    <img src="/posts_image/2026-04-17-How-to-use-GitHub-1/image2.png " width="70%" alt="image2">  
 </div>
 
 ### 添加协作者
@@ -58,13 +58,13 @@ github 在中国没有被明确要求被屏蔽, 然而三大运营商还是会�
 多人开发项目的时候需要在仓库内添加协作者以便能一起开发项目, 在仓库设置内邀请新成员
 
 <div align="center">
-    <img src="./image5.png " width="100%" alt="image5">  
+    <img src="/posts_image/2026-04-17-How-to-use-GitHub-1/image5.png " width="100%" alt="image5">  
 </div>
 
 收到邀请的成员点击头像旁边按钮同意邀请, 然后就可以一起开发项目
 
 <div align="center">
-    <img src="./image6.png " width="70%" alt="image5">  
+    <img src="/posts_image/2026-04-17-How-to-use-GitHub-1/image6.png " width="70%" alt="image5">  
 </div>
 
 由于笔者只有一个账号, 所以不方便演示了, 随便尝试点点就能同意了
@@ -109,8 +109,8 @@ cat ~/.ssh/xxx.pub
 然后在 github 添加密钥
 
 <div align="center">
-    <img src="./image3.png" width="100%" alt="Repositories">
-    <img src="./image4.png" width="100%" alt="Repositories">  
+    <img src="/posts_image/2026-04-17-How-to-use-GitHub-1/image3.png" width="100%" alt="Repositories">
+    <img src="/posts_image/2026-04-17-How-to-use-GitHub-1/image4.png" width="100%" alt="Repositories">  
 </div>
 
 ### 编辑仓库
@@ -118,7 +118,7 @@ cat ~/.ssh/xxx.pub
 获得仓库编辑权限的人可以编辑仓库, 登陆账号后进入仓库, 选择 ssh 然后复制链接
 
 <div align="center">
-    <img src="./image7.png" width="100%" alt="Repositories">  
+    <img src="/posts_image/2026-04-17-How-to-use-GitHub-1/image7.png" width="100%" alt="Repositories">  
 </div>
 
 在终端中进入要存放仓库的文件夹, 输入下面指令克隆仓库
