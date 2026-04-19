@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "git (一) : 环境部署"
+title: "git (一) : 环境部署和基本工作流"
 ---
 
 <!-- markdownlint-disable MD033 -->
