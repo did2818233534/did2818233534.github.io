@@ -23,8 +23,8 @@
 # 站点设置 (Site settings)
 # 这些用于个性化你的站点。你可以通过 {{ site.title }} 等标签在模板中调用。
 title: didi 的博客      # 你的网站标题
-subtitle: 这个人很懒, 还没有写副标题      # 你的网站副标题
-description: 这个人很懒, 还没有写描述          # 网站描述
+subtitle: 因为困难多壮志, 不教红尘惑坚心      # 你的网站副标题
+description:            # 网站描述
 author: did              # 你的名字
 email: did2818233534@outlook.com
 avatar: https://avatars.githubusercontent.com/u/135569561?v=4&size=64 # 你的头像路径
