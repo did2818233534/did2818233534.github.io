@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#264d3d"><meta name="description" content="来地鼠花园休息一分钟。原创卡通打地鼠小游戏，手机电脑都能玩。">
+<title>地鼠花园 · 一分钟的快乐</title>
+<link rel="icon" href="assets/mole.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css">
+<script src="game.js" defer></script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="../../"><span class="brand-icon">✿</span> did 的小花园<span class="brand-en">LITTLE GARDEN</span></a><div class="top-actions"><span class="local-tag">一小会儿，也很快乐</span><button id="sound" class="icon-button" aria-pressed="false" aria-label="开启音效">♪ <span>音效关闭</span></button><a class="home-link" href="../../">回到主页 ↗</a></div></header>
+<main>
+<section class="intro"><div><p class="eyebrow"><span></span> TAKE A LITTLE BREAK</p><h1>地鼠<span>花园</span><i>✦</i></h1><p class="subtitle">放下忙碌，来抓住一点小快乐。</p></div><div class="intro-note"><span class="note-flower">✿</span><span>今日宜：<strong>摸鱼一分钟</strong><small>60 seconds of pure joy</small></span></div></section>
+<div class="layout">
+<section class="game-card" aria-label="打地鼠游戏">
+<div class="scorebar"><div><span class="stat-label">本局得分</span><strong id="score">000</strong></div><div class="time-stat"><span class="stat-label">剩余时间</span><strong><span id="time">60</span><small>s</small></strong></div><div><span class="stat-label">最佳纪录</span><strong class="best"><span class="trophy">♕</span> <span id="best">0</span></strong></div><button class="pause-button" id="pause" disabled aria-label="暂停游戏">Ⅱ</button></div>
+<div class="time-track"><div id="time-fill"></div></div>
+<div class="garden" id="garden"><div class="sun"></div><div class="cloud cloud-one"></div><div class="cloud cloud-two"></div><div class="hill hill-back"></div><div class="hill hill-front"></div><div class="fence"></div><span class="garden-label">THE MOLE GARDEN</span><div class="flowers" aria-hidden="true"><span>✿</span><span>✿</span><span>✿</span><span>✿</span><span>✿</span></div><div class="board" id="board" aria-label="九个地鼠洞"></div><div class="combo-banner" id="combo-banner" aria-live="polite"></div><div class="garden-bottom"><span>✦ 慢一点也没关系，快乐最重要</span><span id="level">花园已就绪</span></div>
+<div class="overlay" id="overlay"><div class="welcome" id="welcome"><div class="welcome-art"><img src="assets/mole.svg" alt="戴着叶子帽的小地鼠"><span class="spark s1">✦</span><span class="spark s2">✦</span><span class="hello">HELLO!</span></div><p class="eyebrow">YOUR LITTLE HAPPY PLACE</p><h2 id="overlay-title">小地鼠，出来玩！</h2><p id="overlay-copy">准备好了吗？看看这一分钟，<br>你能抓住多少只调皮的小家伙。</p><button id="start" class="primary-button">开始捉地鼠 <span>↗</span></button><p class="quiet-note">点击 / 轻触地鼠 · 默认静音</p></div></div>
+</div>
+<div class="game-footer"><span><i class="status-dot"></i><span id="status" role="status">准备好，开启你的花园时间</span></span><span class="keyboard-tip">键盘 <kbd>1</kbd> — <kbd>9</kbd> 也能玩 · 空格暂停</span></div>
+</section>
+<aside><section class="side-card howto"><p class="eyebrow">HOW TO PLAY</p><h2>花园小指南 <span>↙</span></h2><div class="character-row"><div class="portrait"><img src="assets/mole.svg" alt="普通地鼠"></div><div><h3>抓住小地鼠</h3><p>冒头就点它，别让它溜走</p></div><b>+10</b></div><div class="character-row"><div class="portrait gold"><img src="assets/golden.svg" alt="金色地鼠"></div><div><h3>金色小惊喜</h3><p>幸运来敲门，分数翻三倍</p></div><b class="gold-text">+30</b></div><div class="character-row"><div class="portrait bomb"><img src="assets/bomb.svg" alt="炸弹"></div><div><h3>这个不能碰！</h3><p>放过炸弹，守住你的分数</p></div><b class="red-text">−20</b></div><div class="combo-tip"><span>✧</span><p><strong>连击，快乐加倍</strong><br>每连续命中 5 次，额外奖励 20 分！<br>漏掉地鼠或打空，会中断连击。</p></div></section>
+<section class="side-card difficulty"><p class="eyebrow">YOUR OWN PACE</p><h2>选一个节奏</h2><div class="difficulty-options" role="group" aria-label="游戏难度"><button data-mode="easy" aria-pressed="false">慢悠悠<small>轻松一下</small></button><button data-mode="normal" aria-pressed="true" class="selected">刚刚好<small>有点挑战</small></button><button data-mode="hard" aria-pressed="false">手速王<small>全力以赴</small></button></div><p id="mode-hint">从容开场，随时间逐渐加快。</p></section><div class="garden-note"><span>☘</span><p>不必每次都打破纪录。<br>享受这一分钟，就很棒了。</p><span class="note-line"></span></div></aside>
+</div>
+<footer class="page-footer"><span>MADE FOR SMALL, HAPPY MOMENTS.</span><span>原创小花园 · 无需下载 · 纪录仅保存在本机</span></footer>
+</main></body></html>
