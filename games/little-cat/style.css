@@ -1521,3 +1521,75 @@ body.page-hidden * {
     opacity:1;
   }
 }
+
+/* Each interaction has a persistent, recognizable prop as well as a body animation. */
+.interaction-props {position:absolute;bottom:65px;left:50%;width:280px;height:308px;transform:translateX(-50%);z-index:5;pointer-events:none;overflow:visible}
+.prop-feed,.prop-pet,.prop-wash,.prop-sleep {display:none}
+.room[data-action=feeding] .prop-feed,.room[data-action=happy] .prop-pet,.room[data-action=washing] .prop-wash,.room.sleeping .prop-sleep {display:block}
+.room[data-action=feeding] .meal-fish {animation:offer-fish 1.2s ease-in-out 3;transform-origin:190px 337px}
+.room[data-action=feeding] .cat-head {animation:take-bite 1.2s ease-in-out 3}
+.room[data-action=feeding] .paw-left {transform-origin:145px 300px;animation:hold-food 1.2s ease-in-out 3}
+.room[data-action=happy] .pet-hand {animation:stroke-head .9s ease-in-out 4;transform-origin:200px 120px}
+.room[data-action=happy] .pet-hearts {animation:happy-hearts 1.2s ease-out 3}
+.room[data-action=happy] .cat-head {animation:lean-into-hand .9s ease-in-out 4}
+.room[data-action=washing] .cat-body {animation:scrub .45s ease-in-out 8}
+.room[data-action=washing] .cat-head {animation:scrub-head .9s ease-in-out 4}
+.room[data-action=washing] .soap-foam {animation:foam-bob .8s ease-in-out infinite}
+.room[data-action=washing] .water-stream {animation:water-fall .45s linear infinite;transform:translateX(-48px)}
+.room[data-action=washing] .shower {animation:shower-sweep 1.8s ease-in-out 2;transform-origin:124px 70px}
+.cat-button.playing {transform:translateX(var(--chase-x,0px));transition:transform .35s ease-out}
+.cat-button.playing .paw-left {transform-origin:140px 300px;animation:reach-paw .55s ease-in-out infinite}
+.cat-button.playing .cat-head {animation:watch-ball .8s ease-in-out infinite}
+.room.sleeping .cat-button {transform:translateY(24px) rotate(8deg) scale(.9)}
+.room.sleeping .cat-body {animation:breathe 4s ease-in-out infinite}
+.action-bar button.action-active {background:#e8eddb;box-shadow:inset 0 0 0 1px #b6c59b}
+@keyframes offer-fish {0%,100%{transform:translate(0,0) scale(1)}35%,70%{transform:translate(10px,-100px) scale(.65);opacity:1}85%{transform:translate(10px,-100px) scale(.1);opacity:0}}
+@keyframes take-bite {0%,100%{transform:translateY(0) rotate(0)}40%,70%{transform:translateY(13px) rotate(-5deg)}}
+@keyframes hold-food {50%{transform:rotate(-26deg)}}
+@keyframes stroke-head {0%,100%{transform:translate(0,-30px) rotate(-12deg)}50%{transform:translate(24px,1px) rotate(8deg)}}
+@keyframes lean-into-hand {50%{transform:translateY(-9px) rotate(8deg)}}
+@keyframes happy-hearts {0%{transform:translateY(20px);opacity:0}40%{opacity:1}100%{transform:translateY(-35px);opacity:0}}
+@keyframes scrub {25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+@keyframes scrub-head {25%{transform:rotate(8deg)}75%{transform:rotate(-8deg)}}
+@keyframes foam-bob {50%{transform:translateY(-9px)}}
+@keyframes water-fall {from{transform:translate(-48px,-10px);opacity:.9}to{transform:translate(-48px,60px);opacity:.15}}
+@keyframes shower-sweep {50%{transform:translateX(80px) rotate(12deg)}}
+@keyframes reach-paw {50%{transform:rotate(35deg) translateY(-15px)}}
+@keyframes watch-ball {50%{transform:rotate(-9deg)}}
+@media(max-width:1050px){.interaction-props{width:260px;height:286px}}
+@media(max-width:760px){.interaction-props{width:230px;height:253px;bottom:62px}}
+@media(max-width:360px){.interaction-props{width:215px;height:237px}}
+@media(prefers-reduced-motion:reduce){.interaction-props *,.cat-button.playing{animation:none!important;transition:none!important}}
+
+/* Low, four-pawed kitten silhouette and individually accessible touch zones. */
+#cat-art,#cat-art svg {pointer-events:none}
+.touch-zone {position:absolute;border:0;background:transparent;border-radius:45%;padding:0;z-index:3;cursor:pointer;touch-action:manipulation}
+.touch-head {left:17%;top:18%;width:54%;height:45%}
+.touch-paw {left:28%;top:72%;width:44%;height:18%}
+.touch-tail {left:77%;top:46%;width:20%;height:31%}
+.touch-zone:hover {background:#ffffff0a}
+.touch-zone:focus-visible {outline:2px dashed #728b58;outline-offset:0;background:#fff9e324}
+.touch-guide {margin:0;padding:10px 12px 0;text-align:center;color:#a0a58d;font-size:9px;line-height:1.8}
+.touch-guide span {display:inline-block;margin-left:8px}
+.cat-head {transform-origin:175px 285px}
+.cat-body {transform-origin:220px 380px}
+.cat-tail {transform-origin:296px 327px}
+.cat-button.licking .eyes-open,.cat-button.tail-happy .eyes-open {display:none}
+.cat-button.licking .eyes-closed,.cat-button.tail-happy .eyes-closed {display:block}
+.cat-button.licking .cat-head {animation:lick-paw-head .8s ease-in-out infinite}
+.cat-button.licking .paw-left {transform-origin:145px 315px;transform:translate(20px,-76px) rotate(-15deg)}
+.cat-button.licking .mouth-smile {display:none}
+.cat-button.licking .cat-tongue {display:block;transform-origin:175px 253px;animation:lick-tongue .4s ease-in-out infinite}
+.cat-button.tail-happy .cat-tail {animation:happy-tail .36s ease-in-out infinite}
+.cat-button.tail-happy .cat-head {animation:happy-nod .8s ease-in-out infinite}
+.cat-button.happy .cat-body {animation:purr-breathe .22s ease-in-out infinite}
+.room[data-action=happy] .pet-hand {translate:-20px 5px}
+.room[data-action=feeding] .meal-fish {translate:-20px 10px}
+.room.sleeping .cat-button {transform:translateY(26px) rotate(5deg) scale(.92)}
+@keyframes lick-paw-head {0%,100%{transform:translate(-6px,16px) rotate(-9deg)}50%{transform:translate(-6px,31px) rotate(-13deg)}}
+@keyframes lick-tongue {0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1.5)}}
+@keyframes happy-tail {0%,100%{transform:rotate(-17deg)}50%{transform:rotate(23deg)}}
+@keyframes happy-nod {50%{transform:translateY(-6px) rotate(4deg)}}
+@keyframes purr-breathe {50%{transform:translateY(-1px) scaleX(1.005)}}
+@media(max-width:760px){.touch-guide{font-size:8px}.touch-guide span{margin-left:5px}}
+@media(prefers-reduced-motion:reduce){.cat-button *{animation:none!important}.cat-button.licking .cat-head{transform:translateY(20px) rotate(-10deg)}.cat-button.tail-happy .cat-tail{transform:rotate(20deg)}}

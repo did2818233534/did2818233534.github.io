@@ -2,7 +2,8 @@ import {SKINS,CARD,createPet,validatePet,evolve,act,dress,level,encodePixels,dec
 const $=id=>document.getElementById(id);
 const STORE='little-cat-home-v1';
 let pet=createPet(), storageOK=true, catSource='', saveURL='', saveFile=null, pendingImport=null;
-let effectTimer=0,toastTimer=0,busyUntil=0,tickTimer=0,miniTimer=0,mini=null;
+let effectTimer=0,toastTimer=0,tickTimer=0,miniTimer=0,mini=null;
+let purrTimer=0,purrNodes=null;
 let audio=null,sound=false,stream=null,recorder=null,recordTimer=0,recordGeneration=0,voice=null;
 try{const raw=localStorage.getItem(STORE);if(raw)pet=evolve(validatePet(JSON.parse(raw)));}catch{storageOK=false;}
 function persist(){try{localStorage.setItem(STORE,JSON.stringify(pet));storageOK=true;}catch{storageOK=false;}$('save-status').textContent=storageOK?'本机自动记住 · 照片需手动保存':'浏览器无法保存进度，请手动保存照片';}
@@ -20,22 +21,67 @@ function render(){
   $('xp-label').textContent=`${pet.xp-base} / ${next-base}`;$('xp-fill').style.width=`${(pet.xp-base)/(next-base)*100}%`;
   $('growth-copy').textContent=`距离 Lv. ${lv+1} 还差 ${next-pet.xp} 点陪伴`;
   $('room').classList.toggle('sleeping',pet.sleeping);$('sleep').querySelector('strong').textContent=pet.sleeping?'叫醒':'睡觉';$('sleep').querySelector('small').textContent=pet.sleeping?'早安，小猫咪':'做一个好梦';
-  if(!mini)$('room-state').textContent=pet.sleeping?'嘘，小猫正在做美梦':'午后的小小客厅';
+  if(!mini)$('room-state').textContent=pet.sleeping?'嘘，小猫正在做美梦':({feeding:'正在吃小鱼 · 啊呜啊呜',happy:'正在摸摸 · 呼噜呼噜',washing:'正在洗澡 · 搓出小泡泡',licking:'认真舔舔小爪 · 舒服啦','tail-happy':'小尾巴摇呀摇 · 好开心'}[$('room').dataset.action]||'午后的小小客厅');
   applySkin();
 }
-function effect(kind,symbol){clearTimeout(effectTimer);$('cat').classList.remove('happy','washing','feeding','talking','playing');$('cat').classList.add(kind);$('effect').className='room-effect';$('effect').textContent=symbol;void $('effect').offsetWidth;$('effect').classList.add('show');if(kind==='washing')$('effect').classList.add('bubbles');effectTimer=setTimeout(()=>{$('cat').classList.remove(kind);$('effect').className='room-effect';},1500);}
+function clearAction(){
+  clearTimeout(effectTimer);stopPurr();
+  $('cat').classList.remove('happy','washing','feeding','talking','playing','licking','tail-happy');
+  delete $('room').dataset.action;
+  $('effect').className='room-effect';
+  document.querySelectorAll('.action-bar button').forEach(b=>b.classList.remove('action-active'));
+}
+function revealRoom(){
+  const room=$('room').getBoundingClientRect();
+  if(room.top < -80 || room.bottom > innerHeight+100)$('room').scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+}
+function effect(kind,symbol){
+  clearAction();
+  // Flush the reset so repeated taps replay the same animation from the start.
+  void $('cat').offsetWidth;
+  $('cat').classList.add(kind);$('room').dataset.action=kind;
+  const action={feeding:'feed',happy:'pet',washing:'wash'}[kind];
+  if(action)document.querySelector(`.action-bar [data-action="${action}"]`).classList.add('action-active');
+  $('effect').textContent=symbol;$('effect').classList.add('show');
+  if(kind==='washing')$('effect').classList.add('bubbles');
+  if(kind==='happy')startPurr();
+  effectTimer=setTimeout(()=>{clearAction();render();},3600);
+}
+function stopPurr(){
+  clearTimeout(purrTimer);
+  if(purrNodes){for(const node of purrNodes){try{node.stop?.();node.disconnect();}catch{}}purrNodes=null;}
+}
+function startPurr(){
+  if(!sound||!audio||audio.state!=='running')return;
+  stopPurr();
+  // Soft local synthesis: a low rumble modulated at a cat-like purring rhythm.
+  const rumble=audio.createOscillator(),pulse=audio.createOscillator(),depth=audio.createGain(),volume=audio.createGain(),filter=audio.createBiquadFilter();
+  rumble.type='triangle';rumble.frequency.value=84;pulse.frequency.value=25;
+  depth.gain.value=.025;volume.gain.value=.04;filter.type='lowpass';filter.frequency.value=220;
+  pulse.connect(depth);depth.connect(volume.gain);rumble.connect(filter);filter.connect(volume);volume.connect(audio.destination);
+  rumble.start();pulse.start();purrNodes=[rumble,pulse,depth,volume,filter];purrTimer=setTimeout(stopPurr,3400);
+}
 function chime(){if(!sound||!audio||audio.state!=='running')return;const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.setValueAtTime(640,audio.currentTime);o.frequency.exponentialRampToValueAtTime(880,audio.currentTime+.12);g.gain.setValueAtTime(.035,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.2);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.21);}
 function interact(action){
-  if(Date.now()<busyUntil||mini)return;
-  if(action==='play'){startPlay();return;}
-  try{pet=act(pet,action);busyUntil=Date.now()+1200;const text={feed:'啊呜！肚子和心里都暖暖的。',pet:'呼噜呼噜，再摸一下嘛。',wash:'洗香香啦！现在是蓬松小猫。',sleep:pet.sleeping?'晚安，要梦见小鱼干。':'睡醒啦！又可以黏着你了。'};say(text[action]);if(action==='sleep'){stopRecording(true);stopVoice();}else{effect({feed:'feeding',pet:'happy',wash:'washing'}[action],{feed:'♨',pet:'♡',wash:'◌'}[action]);chime();}persist();render();}catch(e){toast(e.message);}
+  if(mini){if(action==='play'){say('点击房间里的毛线球，我来追！');revealRoom();return;}stopPlay();}
+  if(action==='play'){startPlay();revealRoom();return;}
+  try{pet=act(pet,action);const text={feed:'啊呜！肚子和心里都暖暖的。',pet:'呼噜呼噜，再摸一下嘛。',wash:'洗香香啦！现在是蓬松小猫。',sleep:pet.sleeping?'晚安，要梦见小鱼干。':'睡醒啦！又可以黏着你了。'};say(text[action]);if(action==='sleep'){clearAction();stopRecording(true);stopVoice();}else{effect({feed:'feeding',pet:'happy',wash:'washing'}[action],{feed:'♨',pet:'♡',wash:'◌'}[action]);if(action!=='pet')chime();}persist();render();revealRoom();}catch(e){toast(e.message);}
 }
-document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>interact(b.dataset.action)));$('cat').addEventListener('click',()=>interact('pet'));
-function stopPlay(){clearInterval(miniTimer);mini=null;$('yarn').hidden=true;$('cat').classList.remove('playing');render();}
-function moveYarn(){const room=$('room');$('yarn').style.left=`${15+Math.random()*Math.max(1,room.clientWidth-80)}px`;$('yarn').style.top=`${room.clientHeight*.47+Math.random()*room.clientHeight*.27}px`;}
+document.querySelectorAll('.action-bar [data-action]').forEach(b=>b.addEventListener('click',()=>interact(b.dataset.action)));document.querySelectorAll('[data-touch]').forEach(button=>button.addEventListener('click',()=>{
+  const part=button.dataset.touch;
+  if(part==='head'){interact('pet');return;}
+  if(pet.sleeping){toast('小猫正睡着，先轻轻叫醒它吧。');return;}
+  if(mini)stopPlay();
+  pet=act(pet,'pet');
+  if(part==='paw'){effect('licking','♡');say('舔舔小爪，今天也是干净小猫。');}
+  else{effect('tail-happy','♡');say('是你呀！尾巴都藏不住开心了。');}
+  persist();render();revealRoom();
+}));
+function stopPlay(){clearInterval(miniTimer);mini=null;$('yarn').hidden=true;$('cat').classList.remove('playing');$('cat').style.removeProperty('--chase-x');document.querySelector('.action-bar [data-action=play]').classList.remove('action-active');render();}
+function moveYarn(){const room=$('room');$('yarn').style.left=`${15+Math.random()*Math.max(1,room.clientWidth-80)}px`;$('yarn').style.top=`${room.clientHeight*.47+Math.random()*room.clientHeight*.27}px`;$('cat').style.setProperty('--chase-x',`${(parseFloat($('yarn').style.left)/room.clientWidth-.5)*100}px`);}
 function startPlay(){
   if(pet.sleeping){toast('先叫醒小猫，再陪它玩吧。');return;}if(pet.energy<10){toast('有点困了，先睡一小会儿吧。');return;}
-  stopRecording(true);mini={caught:0,end:Date.now()+20000};$('cat').classList.add('playing');$('yarn').hidden=false;moveYarn();say('帮我抓住 5 次毛线球！');
+  clearAction();stopVoice();stopRecording(true);document.querySelector('.action-bar [data-action=play]').classList.add('action-active');mini={caught:0,end:Date.now()+20000};$('cat').classList.add('playing');$('yarn').hidden=false;moveYarn();say('帮我抓住 5 次毛线球！');
   const update=()=>{if(!mini)return;const remaining=Math.max(0,Math.ceil((mini.end-Date.now())/1000));$('room-state').textContent=`追毛线球 ${mini.caught}/5 · 剩余 ${remaining}s`;if(!remaining){stopPlay();say('差一点点，下次再一起玩！');}};update();miniTimer=setInterval(update,250);
 }
 $('yarn').addEventListener('click',()=>{if(!mini||Date.now()>mini.end)return;mini.caught++;chime();if(mini.caught===5){stopPlay();pet=act(pet,'play');say('抓到啦！和你玩最开心。+4 星星');effect('happy','✦');persist();render();}else{say(`抓到 ${mini.caught} 次啦！再来！`);moveYarn();}});
@@ -44,7 +90,7 @@ $('name-input').addEventListener('input',()=>$('name-input').setCustomValidity('
 $('name-form').addEventListener('submit',event=>{event.preventDefault();const name=$('name-input').value.trim();try{pet=validatePet({...pet,name});persist();render();$('name-dialog').close();say(`我叫${pet.name}，要记住我哦。`);}catch(e){$('name-input').setCustomValidity(e.message);$('name-input').reportValidity();}});
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
 document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
-function standaloneCat(skin=pet.skin,accessory=pet.accessory){let s=catSource;for(const key of ['fur','shade','light'])s=s.replaceAll(new RegExp(`var\\(--${key},[^)]+\\)`,'g'),SKINS[skin][key]);return s.replace('</svg>',`<style>.eyes-closed,.mouth-talk{display:none}.accessory-leaf{display:${accessory==='leaf'?'block':'none'}}.accessory-scarf{display:${accessory==='scarf'?'block':'none'}}</style></svg>`);}
+function standaloneCat(skin=pet.skin,accessory=pet.accessory){let s=catSource;for(const key of ['fur','shade','light'])s=s.replaceAll(new RegExp(`var\\(--${key},[^)]+\\)`,'g'),SKINS[skin][key]);return s.replace('</svg>',`<style>.eyes-closed,.mouth-talk,.cat-tongue{display:none}.accessory-leaf{display:${accessory==='leaf'?'block':'none'}}.accessory-scarf{display:${accessory==='scarf'?'block':'none'}}</style></svg>`);}
 function svgURL(svg){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);}
 function wardrobe(){
   $('skins').replaceChildren();for(const [key,skin]of Object.entries(SKINS)){const b=document.createElement('button');b.classList.toggle('selected',key===pet.skin);b.setAttribute('aria-pressed',String(key===pet.skin));const img=new Image();img.src=svgURL(standaloneCat(key));img.alt=skin.name;b.append(img,document.createTextNode(skin.name));const small=document.createElement('small');small.textContent=pet.owned.includes(key)?'已拥有':`✦ ${skin.price}`;b.append(small);b.addEventListener('click',()=>{try{pet=dress(pet,key,pet.accessory);persist();render();wardrobe();$('wardrobe-hint').textContent='换好啦，今天也是可爱的一天。';}catch(e){$('wardrobe-hint').textContent=e.message;}});$('skins').append(b);}
@@ -87,7 +133,7 @@ $('import-dialog').addEventListener('close',()=>{pendingImport=null;});
 function stopVoice(){if(voice){try{voice.stop();}catch{}voice=null;}$('cat').classList.remove('talking');}
 function stopRecording(discard=false){if(discard)recordGeneration++;clearTimeout(recordTimer);if(recorder?.state==='recording')recorder.stop();stream?.getTracks().forEach(track=>track.stop());stream=null;$('record').textContent='按一下说话';$('record').setAttribute('aria-pressed','false');}
 function renderSound(){$('sound').setAttribute('aria-pressed',String(sound));$('sound').querySelector('span').textContent=sound?'声音开启':'声音关闭';}
-$('sound').addEventListener('click',async()=>{if(sound){sound=false;stopRecording(true);stopVoice();if(audio)await audio.suspend();}else{try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw Error();audio ||= new Audio();await audio.resume();sound=true;}catch{toast('浏览器暂不支持音频，仍可静音照顾小猫。');}}renderSound();});
+$('sound').addEventListener('click',async()=>{if(sound){sound=false;stopPurr();stopRecording(true);stopVoice();if(audio)await audio.suspend();}else{try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw Error();audio ||= new Audio();await audio.resume();sound=true;}catch{toast('浏览器暂不支持音频，仍可静音照顾小猫。');}}renderSound();});
 $('record').addEventListener('click',async()=>{
   if(recorder?.state==='recording'){stopRecording();return;}
   if(!sound){toast('先主动打开右上角声音，再让小猫学你说话。');return;}
@@ -109,12 +155,12 @@ $('record').addEventListener('click',async()=>{
   }catch(e){stream?.getTracks().forEach(t=>t.stop());stream=null;toast(e.name==='NotAllowedError'?'没有开启麦克风权限；其它互动不受影响。':'暂时无法使用麦克风，请稍后再试。');}finally{$('record').disabled=false;}
 });
 function startTicks(){clearInterval(tickTimer);tickTimer=setInterval(()=>{if(document.hidden)return;pet=evolve(pet);render();persist();},5000);}
-document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('page-hidden',document.hidden);if(document.hidden){clearInterval(tickTimer);stopPlay();stopRecording(true);stopVoice();pet=evolve(pet);persist();}else{pet=evolve(pet);render();startTicks();}});
-window.addEventListener('pagehide',()=>{clearInterval(tickTimer);clearTimeout(effectTimer);clearTimeout(toastTimer);stopPlay();stopRecording(true);stopVoice();if(audio){audio.close();audio=null;}sound=false;renderSound();persist();});
+document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('page-hidden',document.hidden);if(document.hidden){stopPurr();clearInterval(tickTimer);stopPlay();stopRecording(true);stopVoice();pet=evolve(pet);persist();}else{pet=evolve(pet);render();startTicks();}});
+window.addEventListener('pagehide',()=>{stopPurr();clearInterval(tickTimer);clearTimeout(effectTimer);clearTimeout(toastTimer);stopPlay();stopRecording(true);stopVoice();if(audio){audio.close();audio=null;}sound=false;renderSound();persist();});
 window.addEventListener('pageshow',()=>{if(!document.hidden)startTicks();});
 window.addEventListener('storage',event=>{
   if(event.key!==STORE||!event.newValue)return;
   try{const incoming=evolve(validatePet(JSON.parse(event.newValue)));if(incoming.bornAt!==pet.bornAt||incoming.name!==pet.name||incoming.sleeping){stopPlay();stopRecording(true);stopVoice();}pet=incoming;render();}catch{}
 });
-try{const response=await fetch('assets/cat.svg');if(!response.ok)throw Error();catSource=await response.text();$('cat-art').innerHTML=catSource;}catch{$('cat-art').textContent='🐈';toast('猫咪画面加载失败，请刷新页面。');$('save').disabled=true;}
+try{const response=await fetch('assets/cat.svg?v=4');if(!response.ok)throw Error();catSource=await response.text();$('cat-art').innerHTML=catSource;}catch{$('cat-art').textContent='🐈';toast('猫咪画面加载失败，请刷新页面。');$('save').disabled=true;}
 render();if(pet.sleeping)say('呼……小猫正在做美梦。');persist();startTicks();
