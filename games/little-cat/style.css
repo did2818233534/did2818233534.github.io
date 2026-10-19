@@ -1577,7 +1577,8 @@ body.page-hidden * {
 .cat-button.licking .eyes-open,.cat-button.tail-happy .eyes-open {display:none}
 .cat-button.licking .eyes-closed,.cat-button.tail-happy .eyes-closed {display:block}
 .cat-button.licking .cat-head {animation:lick-paw-head .8s ease-in-out infinite}
-.cat-button.licking .paw-left {transform-origin:145px 315px;transform:translate(20px,-76px) rotate(-15deg)}
+.cat-button.licking .paw-left {display:none}
+.cat-button.licking .paw-bent {display:block}
 .cat-button.licking .mouth-smile {display:none}
 .cat-button.licking .cat-tongue {display:block;transform-origin:175px 253px;animation:lick-tongue .4s ease-in-out infinite}
 .cat-button.tail-happy .cat-tail {animation:happy-tail .36s ease-in-out infinite}
@@ -1586,10 +1587,10 @@ body.page-hidden * {
 .room[data-action=happy] .pet-hand {translate:-20px 5px}
 .room[data-action=feeding] .meal-fish {translate:-20px 10px}
 .room.sleeping .cat-button {transform:translateY(26px) rotate(5deg) scale(.92)}
-@keyframes lick-paw-head {0%,100%{transform:translate(-6px,16px) rotate(-9deg)}50%{transform:translate(-6px,31px) rotate(-13deg)}}
+@keyframes lick-paw-head {0%,100%{transform:translate(0,18px) rotate(-4deg)}50%{transform:translate(0,24px) rotate(-6deg)}}
 @keyframes lick-tongue {0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1.5)}}
 @keyframes happy-tail {0%,100%{transform:rotate(-17deg)}50%{transform:rotate(23deg)}}
 @keyframes happy-nod {50%{transform:translateY(-6px) rotate(4deg)}}
 @keyframes purr-breathe {50%{transform:translateY(-1px) scaleX(1.005)}}
 @media(max-width:760px){.touch-guide{font-size:8px}.touch-guide span{margin-left:5px}}
-@media(prefers-reduced-motion:reduce){.cat-button *{animation:none!important}.cat-button.licking .cat-head{transform:translateY(20px) rotate(-10deg)}.cat-button.tail-happy .cat-tail{transform:rotate(20deg)}}
+@media(prefers-reduced-motion:reduce){.cat-button *{animation:none!important}.cat-button.licking .cat-head{transform:translateY(21px) rotate(-5deg)}.cat-button.tail-happy .cat-tail{transform:rotate(20deg)}}
