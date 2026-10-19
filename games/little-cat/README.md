@@ -1,6 +1,6 @@
 # 猫咪小屋
 
-独立静态的原创 2D 猫咪养成游戏，无框架、无安装、无远程字体/CDN。HTML、CSS、JS 与 SVG 合计约 56 KB（未压缩）。GitHub Pages / Jekyll 可直接发布 `/games/little-cat/`。
+独立静态的原创 2D 猫咪养成游戏，无框架、无安装、无远程字体/CDN。HTML、CSS、JS 与 SVG 合计约 61 KB（未压缩）。GitHub Pages / Jekyll 可直接发布 `/games/little-cat/`。
 
 ## 玩法与保存
 
