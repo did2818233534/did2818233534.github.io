@@ -162,5 +162,5 @@ window.addEventListener('storage',event=>{
   if(event.key!==STORE||!event.newValue)return;
   try{const incoming=evolve(validatePet(JSON.parse(event.newValue)));if(incoming.bornAt!==pet.bornAt||incoming.name!==pet.name||incoming.sleeping){stopPlay();stopRecording(true);stopVoice();}pet=incoming;render();}catch{}
 });
-try{const response=await fetch('assets/cat.svg?v=5');if(!response.ok)throw Error();catSource=await response.text();$('cat-art').innerHTML=catSource;}catch{$('cat-art').textContent='🐈';toast('猫咪画面加载失败，请刷新页面。');$('save').disabled=true;}
+try{const response=await fetch('assets/cat.svg?v=6');if(!response.ok)throw Error();catSource=await response.text();$('cat-art').innerHTML=catSource;}catch{$('cat-art').textContent='🐈';toast('猫咪画面加载失败，请刷新页面。');$('save').disabled=true;}
 render();if(pet.sleeping)say('呼……小猫正在做美梦。');persist();startTicks();
